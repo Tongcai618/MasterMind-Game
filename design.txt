@@ -1,0 +1,12 @@
+Class MasterMind
+
+Attributes:
+    self.button_radius (int): the radius of the button (check_button, X_button).
+    self.slot_radius (int): the radius of the big circles in the UI windows.
+    self.reg_radius (int): the radius of the small circles in the UI window.
+    self.row_interval (int): the vertical interval of each row, representing
+                        different rounds in the game.
+    self.colors (list): the constant list of colors for generating secret code
+                    and for players to pick from.
+
+    self.round (int)
