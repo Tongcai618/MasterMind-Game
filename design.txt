@@ -1,12 +1,71 @@
 Class MasterMind
 
-Attributes:
-    self.button_radius (int): the radius of the button (check_button, X_button).
-    self.slot_radius (int): the radius of the big circles in the UI windows.
-    self.reg_radius (int): the radius of the small circles in the UI window.
-    self.row_interval (int): the vertical interval of each row, representing
-                        different rounds in the game.
-    self.colors (list): the constant list of colors for generating secret code
-                    and for players to pick from.
+    Drawing Methods:
+        Drawing methods draw basic shapes.
+            draw_circle()   
+            draw_solid_circle()
+            draw_rectangle()
+            draw_image()
 
-    self.round (int)
+    Generating Methods:
+        Generating methods generates components of the UI window.
+            generate_secret_code()
+            generate_frame()
+            generate_marbles()
+            generate_hints()
+            generate_selections()
+            generate_X_button()
+            generate_check_button()
+            generate_quit_button()
+            generate_arrow()
+            generate_leaderboard()
+
+    Reaction Methods:
+            pop_up_window()
+            read_leaderboard()
+            write_text()
+            to_text()
+
+
+    Clicking Methods:
+        Handling the action after clicking the button.
+
+            click_selection_button()
+                    |
+                remove_solid_circle()
+            
+            click_X_button()
+                    |
+                recover_solid_circle()
+
+            click_check_button()
+            /       |            \ 
+        win()       loss()   proceed_to_next_round()
+                                /                 \
+                        light_up_hints()      generate_selections()
+                    
+            click_quit_button()
+                    |
+                draw_image()
+
+    Error Raising Functions:
+            leaderboard_error()
+            file_error()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

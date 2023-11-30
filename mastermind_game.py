@@ -139,7 +139,7 @@ class MasterMind:
             Generates the secret code for the game by randomly 
             selecting colors.
 
-        generate_pop_up_window(self, title, prompt):
+        pop_up_window(self, title, prompt):
             Generates a pop-up window for user input, such as name entry.
 
         draw_circle(self, x, y, radius):
@@ -162,7 +162,7 @@ class MasterMind:
             Creates the main frame of the game's UI.
 
         generate_marbles(self):
-            Generates the marbles in the game's UI where the colors 
+            Generates the marbles in the game's UI where the colors
             will be displayed.
 
         generate_hints(self):
@@ -230,7 +230,7 @@ class MasterMind:
         self.secret_code.pop(random.randint(0, len(self.secret_code) - 1))
         return self.secret_code
 
-    def generate_pop_up_window(self, title: str, prompt: str) -> str:
+    def pop_up_window(self, title: str, prompt: str) -> str:
         """ This method is to generate a pop up window for users to enter
         their names. Their names and records will be stored based on their
         performances.
@@ -548,6 +548,12 @@ class MasterMind:
         with open(self.leaderboard_path, 'a') as file:
             file.write(f"{self.round + 1}: {text}\n")
 
+    def leaderboard_error(self) -> None:
+        x = 0.27 * self.width
+        y = 0.33 * self.height
+        path = "Mastermind_Starter_code/leaderboard_error.gif"
+        self.draw_image(x=x, y=y, path=path)
+
     def generate_leaderboard(self) -> None:
         """ This method is to generate the leaderboard, consisting the list of
         players who got the best performance before.
@@ -565,10 +571,7 @@ class MasterMind:
             leaders_list = self.read_leaderboard(path=self.leaderboard_path)
         except FileNotFoundError:
             # if cannot find the leaderboard.txt, display the leaderboard error
-            x = 0.27 * self.width
-            y = 0.33 * self.height
-            path = "Mastermind_Starter_code/leaderboard_error.gif"
-            self.draw_image(x=x, y=y, path=path)
+            self.leaderboard_error()
             leaders_list = []
 
         for rank, leader in enumerate(leaders_list):
@@ -805,13 +808,12 @@ class MasterMind:
         If the players win, if will return a True.
 
         The check button has 3 situations.
-
-        1. Win:
-            Call the function self.win().
-        2. Loss:
-            Call the function self.loss().
-        3. Move to the next round:
-            Clear the self.selction_stack, increase self.round by 1.
+            1. Win:
+                Call the function self.win().
+            2. Loss:
+                Call the function self.loss().
+            3. Move to the next round:
+                Clear the self.selction_stack, increase self.round by 1.
         """
         # light up the hint to prompt players
         hints = MasterMindComparison(secret_code=self.secret_code,
@@ -835,10 +837,10 @@ class MasterMind:
         3. Move to the next round:
             Clear the self.selction_stack, increase self.round by 1.
         """
-        self.proceed_to_next_round(hints=hints)
+        self.proceed_to_next_round(last_result=hints)
 
     def click_quit_button(self) -> None:
-        """ This method is to activate the condition of clicking 
+        """ This method is to handle the action of clicking
         the quit button.
         """
         # pop up the quit.gif window
@@ -1081,8 +1083,8 @@ def setup_mastermind_config(path) -> MasterMind:
 def get_player_sign_in(mastermind: MasterMind):
     title = "CS 5001 MasterMind"
     prompt = "Enter your name: "
-    mastermind.generate_pop_up_window(title=title,
-                                      prompt=prompt)
+    mastermind.pop_up_window(title=title,
+                             prompt=prompt)
 
 
 def create_mastermind_ui(mastermind: MasterMind):

@@ -1,5 +1,6 @@
 Nov 26
 FileNotFoundError: [Errno 2] No such file or directory: 'leaderboard.txt'
+
 Nov 28
 Traceback (most recent call last):
   File "/Users/Tonycai/Desktop/N/NEU/NEU_CS_Courses/CS5001/Project/mastermind_game.py", line 1034, in <module>
@@ -19,3 +20,15 @@ Traceback (most recent call last):
   File "/opt/anaconda3/lib/python3.9/turtle.py", line 1159, in _colorstr
     raise TurtleGraphicsError("bad color string: %s" % str(color))
 turtle.TurtleGraphicsError: bad color string: [
+
+Nov 30
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.9/tkinter/__init__.py", line 1892, in __call__
+    return self.func(*args)
+  File "/opt/anaconda3/lib/python3.9/turtle.py", line 674, in eventfun
+    fun(x, y)
+  File "/Users/Tonycai/Desktop/N/NEU/NEU_CS_Courses/CS5001/MasterMind-Game/mastermind_game.py", line 982, in click
+    self.click_check_button()
+  File "/Users/Tonycai/Desktop/N/NEU/NEU_CS_Courses/CS5001/MasterMind-Game/mastermind_game.py", line 837, in click_check_button
+    self.proceed_to_next_round(hints=hints)
+TypeError: proceed_to_next_round() got an unexpected keyword argument 'hints'
