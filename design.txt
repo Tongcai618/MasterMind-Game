@@ -1,71 +1,9 @@
-Class MasterMind
+The MasterMind game program is structured around a central class MasterMind that encapsulates the logic and the user interface (UI) elements of the game. This class is organized into several method groups, each serving a distinct purpose in the game's functionality. This design promotes modularity and clarity, making the code easier to understand and maintain.
 
-    Drawing Methods:
-        Drawing methods draw basic shapes.
-            draw_circle()   
-            draw_solid_circle()
-            draw_rectangle()
-            draw_image()
+Firstly, the "Drawing Methods" group consists of functions that deal with drawing basic shapes and images on the screen. These methods, like draw_circle(), draw_solid_circle(), draw_rectangle(), and draw_image(), are fundamental for creating the visual components of the game. They are used to display various elements, like game buttons, marbles, and the game board, providing a visually interactive experience for the player.
 
-    Generating Methods:
-        Generating methods generates components of the UI window.
-            generate_secret_code()
-            generate_frame()
-            generate_marbles()
-            generate_hints()
-            generate_selections()
-            generate_X_button()
-            generate_check_button()
-            generate_quit_button()
-            generate_arrow()
-            generate_leaderboard()
+The second notable group is the "Generating Methods." These methods are crucial for dynamically creating the components of the MasterMind game's UI. This includes generating the secret code (generate_secret_code()), the game frame (generate_frame()), and various interactive elements like marbles, hints, and buttons (generate_marbles(), generate_hints(), etc.). These methods bring the game to life by setting up the playing area and ensuring that the players have all the necessary elements to interact with the game, such as selection buttons and hint indicators. The modular nature of these methods allows for easy updates and changes to the game's UI and logic.
 
-    Reaction Methods:
-            pop_up_window()
-            read_leaderboard()
-            write_text()
-            to_text()
+Lastly, the "Reaction Methods" and "Clicking Methods" handle the interactions and responses within the game. Reaction methods like pop_up_window(), read_leaderboard(), and write_text() manage the feedback and display information to the player, enhancing the game's interactivity. The clicking methods, such as click_selection_button() and click_check_button(), define the game's response to user actions. These methods are critical for the game's functionality, as they determine the flow of the game, including win or loss conditions, advancing rounds, and handling player inputs.
 
-
-    Clicking Methods:
-        Handling the action after clicking the button.
-
-            click_selection_button()
-                    |
-                remove_solid_circle()
-            
-            click_X_button()
-                    |
-                recover_solid_circle()
-
-            click_check_button()
-            /       |            \ 
-        win()       loss()   proceed_to_next_round()
-                                /                 \
-                        light_up_hints()      generate_selections()
-                    
-            click_quit_button()
-                    |
-                draw_image()
-
-    Error Raising Functions:
-            leaderboard_error()
-            file_error()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+In summary, the design of the MasterMind program is well-structured, dividing the functionality into clear, focused method groups. This design enhances the code's readability and maintainability, allowing for easier modifications and extensions of the game's features.

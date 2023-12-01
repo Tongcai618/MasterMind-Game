@@ -174,13 +174,13 @@ class MasterMind:
         read_leaderboard(self, path):
             Reads the leaderboard data from a file.
 
-        write_text(self, x, y, color, font, text):
+        display_text(self, x, y, color, font, text):
             Writes text on the game's UI.
     """
 
     def __init__(self, width: int, height: int, title: str,
                  speed: int, button_radius: int, marble_radius: int,
-                 reg_radius: int, row_interval: int, colors: list,
+                 reg_radius: int, colors: list,
                  leaderboard_path: str, font: tuple) -> None:
         self.width = width
         self.height = height
@@ -188,7 +188,7 @@ class MasterMind:
         self.button_radius = button_radius
         self.marble_radius = marble_radius
         self.reg_radius = reg_radius
-        self.row_interval = row_interval
+        self.row_interval = self.height * 0.07
         self.speed = speed
         self.colors = colors
         # create a stack to store players' selections at each round
@@ -217,34 +217,6 @@ class MasterMind:
         # set the width and height of quit button
         self.quit_button_width = 58
         self.quit_button_height = 29
-
-    def generate_secret_code(self) -> list[str]:
-        """ This method is to generate secret code. It will randomly
-        choose 4 colors out of 6 to return a secret code list.
-
-        Returns:
-            list[str]: a secret code list consists of 4 colors.
-        """
-        self.secret_code = self.colors[:]
-        self.secret_code.pop(random.randint(0, len(self.secret_code) - 1))
-        self.secret_code.pop(random.randint(0, len(self.secret_code) - 1))
-        return self.secret_code
-
-    def pop_up_window(self, title: str, prompt: str) -> str:
-        """ This method is to generate a pop up window for users to enter
-        their names. Their names and records will be stored based on their
-        performances.
-
-        Args:
-            title (str): the title of the pop-up window.
-            prompt (str): the text that users input.
-
-        Returns:
-            str: the text that users input.
-        """
-        self.name = self.screen.textinput(title=title,
-                                          prompt=prompt)
-        return self.name
 
     def draw_circle(self, x: int, y: int, radius: int) -> None:
         """ This method is to draw a unfilled circle given
@@ -283,21 +255,6 @@ class MasterMind:
         self.turtle.end_fill()
         # set back the original color
         self.turtle.color("black")
-
-    def remove_solid_circle(self, x: int, y: int, radius: int) -> None:
-        """ This method is to remove a solid cirle's color with the
-        background color but preserve its border.
-
-        Args:
-            x (int): The x-coordinate of the circle's center.
-            y (int): The y-coordinate of the circle's center.
-            radius (int): the radius of the circle.
-        """
-        # fill white color
-        self.draw_solid_circle(x=x, y=y, radius=radius,
-                               color=self.turtle.screen.bgcolor())
-        # redraw the border
-        self.draw_circle(x=x, y=y, radius=radius)
 
     def draw_rectangle(self, x: int, y: int,
                        width: int, height: int, color: str):
@@ -344,8 +301,10 @@ class MasterMind:
         """
         image = turtle.Turtle()
         image.speed(self.speed)
+        # add the path of the image
         self.screen.addshape(path)
         image.penup()
+        # store the coordinate of the image
         image_coordinate = {'x': x, 'y': y}
         image.setpos(image_coordinate['x'],
                      image_coordinate['y'])
@@ -353,6 +312,18 @@ class MasterMind:
         image.shape(path)
 
         return image_coordinate
+
+    def generate_secret_code(self) -> list[str]:
+        """ This method is to generate secret code. It will randomly
+        choose 4 colors out of 6 to return a secret code list.
+
+        Returns:
+            list[str]: a secret code list consists of 4 colors.
+        """
+        self.secret_code = self.colors[:]
+        self.secret_code.pop(random.randint(0, len(self.secret_code) - 1))
+        self.secret_code.pop(random.randint(0, len(self.secret_code) - 1))
+        return self.secret_code
 
     def generate_frame(self):
         """
@@ -446,6 +417,7 @@ class MasterMind:
                                  y=y,
                                  radius=hint_radius)
                 group.append({'x': x, 'y': y})
+
             for index in range(1, index_number + 1):
                 x = initial_x + index * index_interval
                 y = initial_y - row * self.row_interval - 20
@@ -457,103 +429,6 @@ class MasterMind:
 
         return self.hints_coordinate
 
-    def light_up_hints(self, nums_correct_position: int,
-                       nums_wrong_position: int):
-        """ This method is to light up the hints at each round of the game,
-        given the number of colors in correct position and number of color in
-        wrong position. Red pegs meant a correct color but out of position,
-        black pegs meant a correct color in the correct position.
-
-        Args:
-            nums_correct_position (int): the number of red pegs.
-            nums_wrong_position (int): the number of black pegs.
-        """
-        # define the index of hints, the index will increase from 0 to 3
-        index = 0
-        # light up the red pegs for number of color in correct position
-        while nums_correct_position > 0:
-            x = self.hints_coordinate[self.round][index]['x']
-            y = self.hints_coordinate[self.round][index]['y']
-            radius = self.reg_radius
-            color = "black"
-            self.draw_solid_circle(x, y, radius=radius, color=color)
-            index += 1
-            nums_correct_position -= 1
-        # light up the black regs for number of color in wrong position
-        while nums_wrong_position > 0:
-            x = self.hints_coordinate[self.round][index]['x']
-            y = self.hints_coordinate[self.round][index]['y']
-            radius = self.reg_radius
-            color = "red"
-            self.draw_solid_circle(x, y, radius=radius, color=color)
-            index += 1
-            nums_wrong_position -= 1
-
-    def read_leaderboard(self, path) -> list[tuple[int:str]]:
-        """ This method is to read the leaderboard.txt file and convert the
-        text to a list with tuple elements. After that, this method will
-        sort the leader list based on ascending order.
-
-            i.e. [(3, "Tong Cai"), (5, "Jenny Yi"), ......]
-
-        Returns:
-            list[tuple[int:str]]: a list consists of tuple elements. Each
-                                  element is a tuple with scores and name.
-        """
-        leaders_list = []
-        # open the leaderboard.txt
-        with open(path, 'r') as leaders:
-            if leaders is None:
-                return []
-            for leader in leaders:
-                if ":" in leader:
-                    scores, name = leader.split(':')
-                    # drop any "\n" and space around name
-                    name = name.replace("\n", "").strip(' ')
-                    leaders_list.append(tuple([int(scores), name]))
-        # sort the leaders list with ascending order
-        sorted_leaders_list = sorted(leaders_list, key=lambda x: x[0])
-        # only display the top 5 players
-        sorted_leaders_list = sorted_leaders_list[0:5]
-
-        return sorted_leaders_list
-
-    def write_text(self, x: int, y: int, color: str,
-                   font: tuple, text: str) -> None:
-        """ This function is to write specified text given its coordinate,
-        color, and font on the leaderboard area.
-
-        Args:
-            x (int): the x-coordinate of the text.
-            y (int): the y-coordinate of the text.
-            color (str): the color of the text.
-            font (tuple): the font of the text.
-            text (str): the text needed to be written.
-        """
-        pen = turtle.Turtle()
-        pen.hideturtle()
-        pen.penup()
-        pen.setpos(x=x, y=y)
-        pen.pendown()
-        pen.color(color)
-        pen.write(text, font=font)
-
-    def to_text(self, text: str):
-        """ This method is to save the current player's name and its scores.
-        The text will be saved like: "5: Tong Cai", "3: Jenny Yi"......
-
-        Args:
-            text (str): the text to be saved into leaderboard.txt.
-        """
-        with open(self.leaderboard_path, 'a') as file:
-            file.write(f"{self.round + 1}: {text}\n")
-
-    def leaderboard_error(self) -> None:
-        x = 0.27 * self.width
-        y = 0.33 * self.height
-        path = "Mastermind_Starter_code/leaderboard_error.gif"
-        self.draw_image(x=x, y=y, path=path)
-
     def generate_leaderboard(self) -> None:
         """ This method is to generate the leaderboard, consisting the list of
         players who got the best performance before.
@@ -564,14 +439,14 @@ class MasterMind:
         color = "blue"
         font = self.font
         # write the intial line of the leaderboard
-        self.write_text(x=initial_x, y=initial_y, color=color,
-                        font=font, text=text)
+        self.display_text(x=initial_x, y=initial_y, color=color,
+                          font=font, text=text)
         # read the leaders_list
         try:
             leaders_list = self.read_leaderboard(path=self.leaderboard_path)
         except FileNotFoundError:
             # if cannot find the leaderboard.txt, display the leaderboard error
-            self.leaderboard_error()
+            self.raise_leaderboard_error()
             leaders_list = []
 
         for rank, leader in enumerate(leaders_list):
@@ -579,9 +454,9 @@ class MasterMind:
             # adjust the y-coordinate for each subsequent leader to be 50px
             # lower on the leader board
             y = initial_y - ((rank + 1) * self.row_interval)
-            self.write_text(x=x, y=y,
-                            color="blue", font=font,
-                            text=f"{leader[0]}: {leader[1]}")
+            self.display_text(x=x, y=y,
+                              color="blue", font=font,
+                              text=f"{leader[0]}: {leader[1]}")
 
     def generate_selections(self) -> dict[dict]:
         """ This method is to generate the selection area consisting of
@@ -614,49 +489,6 @@ class MasterMind:
             self.selections_coordinate[color] = {'x': x, 'y': y}
 
         return self.selections_coordinate
-
-    def remove_selected_circle_color(self, color: str):
-        """ This method is to remove the circle's color of the
-        selected circle in the selection area.
-
-        self.colors = ["red", "blue", "green", "yellow", "purple", "black"]
-
-        Args:
-            color (str): the color of the selected selection circles that
-                         need to be removed.
-
-        """
-        initial_x = -0.37 * self.width
-        initial_y = -0.4 * self.height
-        index_interval = 0.06 * self.width
-        selections_radius = self.marble_radius
-        color = color
-        index = self.colors.index(color)
-        self.remove_solid_circle(x=initial_x + index * index_interval,
-                                 y=initial_y,
-                                 radius=selections_radius)
-
-    def recover_selected_circle_color(self, color: str):
-        """ This method is to recover the circle's color of the selected
-        circle in the selection area.
-
-        self.colors = ["red", "blue", "green", "yellow", "purple", "black"]
-
-        Args:
-            color (str): the color of the selected selection circles that
-                         need to be recovered
-
-        """
-        initial_x = -0.37 * self.width
-        initial_y = -0.4 * self.height
-        index_interval = 0.06 * self.width
-        selections_radius = self.marble_radius
-        color = color
-        index = self.colors.index(color)
-        self.draw_solid_circle(x=initial_x + index * index_interval,
-                               y=initial_y,
-                               radius=selections_radius,
-                               color=color)
 
     def generate_check_button(self) -> dict[str:int]:
         """ This method is to generate a check button for players to check
@@ -730,6 +562,171 @@ class MasterMind:
 
         return self.arrow_coordinate
 
+    def pop_up_window(self, title: str, prompt: str) -> str:
+        """ This method is to generate a pop up window for users to enter
+        their names. Their names and records will be stored based on their
+        performances.
+
+        Args:
+            title (str): the title of the pop-up window.
+            prompt (str): the text that users input.
+
+        Returns:
+            str: the text that users input.
+        """
+        self.name = self.screen.textinput(title=title,
+                                          prompt=prompt)
+        return self.name
+
+    def remove_solid_circle(self, x: int, y: int, radius: int) -> None:
+        """ This method is to remove a solid cirle's color with the
+        background color but preserve its border.
+
+        Args:
+            x (int): The x-coordinate of the circle's center.
+            y (int): The y-coordinate of the circle's center.
+            radius (int): the radius of the circle.
+        """
+        # fill white color
+        self.draw_solid_circle(x=x, y=y, radius=radius,
+                               color=self.turtle.screen.bgcolor())
+        # redraw the border
+        self.draw_circle(x=x, y=y, radius=radius)
+
+    def light_up_hints(self, nums_correct_position: int,
+                       nums_wrong_position: int):
+        """ This method is to light up the hints at each round of the game,
+        given the number of colors in correct position and number of color in
+        wrong position. Red pegs meant a correct color but out of position,
+        black pegs meant a correct color in the correct position.
+
+        Args:
+            nums_correct_position (int): the number of red pegs.
+            nums_wrong_position (int): the number of black pegs.
+        """
+        # define the index of hints, the index will increase from 0 to 3
+        index = 0
+        # light up the red pegs for number of color in correct position
+        while nums_correct_position > 0:
+            x = self.hints_coordinate[self.round][index]['x']
+            y = self.hints_coordinate[self.round][index]['y']
+            radius = self.reg_radius
+            color = "black"
+            self.draw_solid_circle(x, y, radius=radius, color=color)
+            index += 1
+            nums_correct_position -= 1
+        # light up the black regs for number of color in wrong position
+        while nums_wrong_position > 0:
+            x = self.hints_coordinate[self.round][index]['x']
+            y = self.hints_coordinate[self.round][index]['y']
+            radius = self.reg_radius
+            color = "red"
+            self.draw_solid_circle(x, y, radius=radius, color=color)
+            index += 1
+            nums_wrong_position -= 1
+
+    def read_leaderboard(self, path) -> list[tuple[int:str]]:
+        """ This method is to read the leaderboard.txt file and convert the
+        text to a list with tuple elements. After that, this method will
+        sort the leader list based on ascending order.
+
+            i.e. [(3, "Tong Cai"), (5, "Jenny Yi"), ......]
+
+        Returns:
+            list[tuple[int:str]]: a list consists of tuple elements. Each
+                                  element is a tuple with scores and name.
+        """
+        leaders_list = []
+        # open the leaderboard.txt
+        with open(path, 'r') as leaders:
+            if leaders is None:
+                return []
+            for leader in leaders:
+                if ":" in leader:
+                    scores, name = leader.split(':')
+                    # drop any "\n" and space around name
+                    name = name.replace("\n", "").strip(' ')
+                    leaders_list.append(tuple([int(scores), name]))
+        # sort the leaders list with ascending order
+        sorted_leaders_list = sorted(leaders_list, key=lambda x: x[0])
+        # only display the top 5 players
+        sorted_leaders_list = sorted_leaders_list[0:5]
+
+        return sorted_leaders_list
+
+    def to_leaderboard(self, text: str):
+        """ This method is to save the current player's name and its scores.
+        The text will be saved like: "5: Tong Cai", "3: Jenny Yi"......
+
+        Args:
+            text (str): the text to be saved into leaderboard.txt.
+        """
+        with open(self.leaderboard_path, 'a') as file:
+            file.write(f"{self.round + 1}: {text}\n")
+
+    def display_text(self, x: int, y: int, color: str,
+                     font: tuple, text: str) -> None:
+        """ This method is to display specified text given its coordinate,
+        color, and font on the leaderboard area.
+
+        Args:
+            x (int): the x-coordinate of the text.
+            y (int): the y-coordinate of the text.
+            color (str): the color of the text.
+            font (tuple): the font of the text.
+            text (str): the text needed to be written.
+        """
+        pen = turtle.Turtle()
+        pen.hideturtle()
+        pen.penup()
+        pen.setpos(x=x, y=y)
+        pen.pendown()
+        pen.color(color)
+        pen.write(text, font=font)
+
+    def remove_selected_circle_color(self, color: str):
+        """ This method is to remove the circle's color of the
+        selected circle in the selection area.
+
+        self.colors = ["red", "blue", "green", "yellow", "purple", "black"]
+
+        Args:
+            color (str): the color of the selected selection circles that
+                         need to be removed.
+
+        """
+        initial_x = -0.37 * self.width
+        initial_y = -0.4 * self.height
+        index_interval = 0.06 * self.width
+        selections_radius = self.marble_radius
+        color = color
+        index = self.colors.index(color)
+        self.remove_solid_circle(x=initial_x + index * index_interval,
+                                 y=initial_y,
+                                 radius=selections_radius)
+
+    def recover_selected_circle_color(self, color: str):
+        """ This method is to recover the circle's color of the selected
+        circle in the selection area.
+
+        self.colors = ["red", "blue", "green", "yellow", "purple", "black"]
+
+        Args:
+            color (str): the color of the selected selection circles that
+                         need to be recovered
+
+        """
+        initial_x = -0.37 * self.width
+        initial_y = -0.4 * self.height
+        index_interval = 0.06 * self.width
+        selections_radius = self.marble_radius
+        color = color
+        index = self.colors.index(color)
+        self.draw_solid_circle(x=initial_x + index * index_interval,
+                               y=initial_y,
+                               radius=selections_radius,
+                               color=color)
+
     def move_arrow(self, distance: int):
         """ This method is to move the arrow given a specific distance.
 
@@ -737,32 +734,6 @@ class MasterMind:
             distance (int): the distance of moving.
         """
         self.arrow.forward(distance=distance)
-
-    def proceed_to_next_round(self, last_result: MasterMindComparison):
-        """ This method is to proceed the game to the next round.
-        To proceed the next round, this method will light up the hints of
-        last round. After that, this method will increase self.round by 1, and
-        clear the self.selection_stack for the next round's selection. Finally,
-        this method will recover all selections in the selection area and move
-        the arrow to the next round's position.
-
-        Args:
-            hints (MasterMindComparison): the hints of last game, which
-                contains the number of color int he correct position and
-                the number of color in the wrong position.
-        """
-        # if the guess are not correct, prompt the hints
-        self.light_up_hints(nums_correct_position=(
-            last_result.get_number_of_correct_position()),
-            nums_wrong_position=(
-            last_result.get_number_of_wrong_position()))
-        # go into the next round
-        self.round += 1
-        self.selection_stack = []
-        # regain all selections
-        self.generate_selections()
-        # move the arrow
-        self.move_arrow(distance=self.row_interval)
 
     def click_selection_button(self, color: str) -> None:
         """ This method is to react after clicking a specific color circle.
@@ -815,11 +786,12 @@ class MasterMind:
             3. Move to the next round:
                 Clear the self.selction_stack, increase self.round by 1.
         """
-        # light up the hint to prompt players
-        hints = MasterMindComparison(secret_code=self.secret_code,
-                                     picked_colors=self.selection_stack)
+        # use the last result to light up the hint to prompt players
+        last_round_result = MasterMindComparison(
+            secret_code=self.secret_code,
+            picked_colors=self.selection_stack)
         # to check whether the player win the game
-        self.is_win = hints.is_win()
+        self.is_win = last_round_result.is_win()
         # if the guess are correct, the users win
         if self.is_win is True:
             """
@@ -837,7 +809,7 @@ class MasterMind:
         3. Move to the next round:
             Clear the self.selction_stack, increase self.round by 1.
         """
-        self.proceed_to_next_round(last_result=hints)
+        self.proceed_to_next_round(last_result=last_round_result)
 
     def click_quit_button(self) -> None:
         """ This method is to handle the action of clicking
@@ -861,7 +833,7 @@ class MasterMind:
         path = "Mastermind_Starter_code/winner.gif"
         # pop up the winner.gif window
         self.draw_image(x=x, y=y, path=path)
-        self.to_text(self.name)
+        self.to_leaderboard(self.name)
         # end the onscreenclick
         self.screen.onscreenclick(None)
         time.sleep(2)
@@ -877,15 +849,51 @@ class MasterMind:
         self.screen.onscreenclick(None)
         self.draw_image(x=x, y=y, path=path)
         time.sleep(2)
-        self.screen.textinput(title="Secret Code: ",
-                              prompt=f"{self.secret_code[0]} "
-                              f"{self.secret_code[1]} "
-                              f"{self.secret_code[2]} "
-                              f"{self.secret_code[3]} ")
+        self.pop_up_window(title="Secret Code: ",
+                           prompt=f"{self.secret_code[0]} "
+                           f"{self.secret_code[1]} "
+                           f"{self.secret_code[2]} "
+                           f"{self.secret_code[3]} ")
         self.screen.bye()
 
-    def file_error(self):
-        """ This method is to raise a file error.
+    def proceed_to_next_round(self, last_result: MasterMindComparison):
+        """ This method is to proceed the game to the next round.
+        To proceed the next round, this method will light up the hints of
+        last round. After that, this method will increase self.round by 1, and
+        clear the self.selection_stack for the next round's selection. Finally,
+        this method will recover all selections in the selection area and move
+        the arrow to the next round's position.
+
+        Args:
+            last_result (MasterMindComparison): the hints of last game, which
+                contains the number of color int he correct position and
+                the number of color in the wrong position.
+        """
+        # if the guess are not correct, prompt the hints
+        self.light_up_hints(nums_correct_position=(
+            last_result.get_number_of_correct_position()),
+            nums_wrong_position=(
+            last_result.get_number_of_wrong_position()))
+        # go into the next round
+        self.round += 1
+        self.selection_stack = []
+        # regain all selections
+        self.generate_selections()
+        # move the arrow
+        self.move_arrow(distance=self.row_interval)
+
+    def raise_leaderboard_error(self) -> None:
+        """ This method is to raise a leaderboard error
+        when the leaderboard file was not found.
+        """
+        x = 0.27 * self.width
+        y = 0.33 * self.height
+        path = "Mastermind_Starter_code/leaderboard_error.gif"
+        self.draw_image(x=x, y=y, path=path)
+
+    def raise_config_error(self):
+        """ This method is to raise a file error when the configuration
+        file was not found.
         """
         x = 0.27 * self.width
         y = -0.2 * self.height
@@ -933,6 +941,7 @@ class MasterMind:
                      self.marble_radius) < y < (
                         self.selections_coordinate[color]['y'] +
                         self.marble_radius)):
+                    # activate the selection button
                     self.click_selection_button(color=color)
             """
             # 2. X: they can cancel their selections
@@ -996,6 +1005,12 @@ class MasterMind:
         self.screen.mainloop()
 
 
+"""
+The functions below are used to create a MasterMind object and
+call its methods to run and maintain the game.
+"""
+
+
 def load_config(path: str) -> dict:
     """ This function loads the configuration file.
 
@@ -1003,7 +1018,7 @@ def load_config(path: str) -> dict:
         path (str): the path of the configuration file.
 
     Returns:
-        dict: a dict of config
+        dict: a dict of configuration for the game.
     """
     config_dict = {}
     with open(file=path, mode='r') as config:
@@ -1020,6 +1035,16 @@ def load_config(path: str) -> dict:
 
 
 def setup_mastermind_config(path) -> MasterMind:
+    """ This function create a MasterMind instance based on
+    the configuration file or default values.
+
+    Args:
+        path (_type_): the path of the configuration file.
+
+    Returns:
+        MasterMind: a MasterMind instance that used to
+                    play the Mastermind game.
+    """
     try:
         # if the configuration file exists, load the configuration file
         config = load_config(path)
@@ -1030,11 +1055,11 @@ def setup_mastermind_config(path) -> MasterMind:
         button_radius = int(config["button_radius"])
         marble_radius = int(config["marble_radius"])
         reg_radius = int(config["reg_radius"])
-        row_interval = int(config["row_interval"])
         title = config["title"]
         leaderboard_path = config["leaderboard_path"]
         colors = config["colors"].replace(' ', '').split(',')
         font = tuple(config['font'].replace(' ', '').split(','))
+
         mastermind = MasterMind(
             width=width,
             height=height,
@@ -1043,7 +1068,6 @@ def setup_mastermind_config(path) -> MasterMind:
             button_radius=button_radius,
             marble_radius=marble_radius,
             reg_radius=reg_radius,
-            row_interval=row_interval,
             colors=colors,
             leaderboard_path=leaderboard_path,
             font=font)
@@ -1056,7 +1080,6 @@ def setup_mastermind_config(path) -> MasterMind:
         button_radius = BUTTON_RADIUS
         marble_radius = MARBLE_RADIUS
         reg_radius = REG_RADIUS
-        row_interval = ROW_INTERVAL
         title = TITLE
         colors = COLORS
         leaderboard_path = LEADERBOARD_PATH
@@ -1070,17 +1093,22 @@ def setup_mastermind_config(path) -> MasterMind:
             button_radius=button_radius,
             marble_radius=marble_radius,
             reg_radius=reg_radius,
-            row_interval=row_interval,
             colors=colors,
             leaderboard_path=leaderboard_path,
             font=font)
-        # raise the file_error
-        mastermind.file_error()
+        # raise the configuration file error
+        mastermind.raise_config_error()
 
     return mastermind
 
 
 def get_player_sign_in(mastermind: MasterMind):
+    """ This function is to let players sign in the game with
+    their names.
+
+    Args:
+        mastermind (MasterMind): a mastermind object.
+    """
     title = "CS 5001 MasterMind"
     prompt = "Enter your name: "
     mastermind.pop_up_window(title=title,
@@ -1088,6 +1116,11 @@ def get_player_sign_in(mastermind: MasterMind):
 
 
 def create_mastermind_ui(mastermind: MasterMind):
+    """ This function is to create the mastermind user interface window.
+
+    Args:
+        mastermind (MasterMind): a mastermind object.
+    """
     mastermind.generate_frame()
     mastermind.generate_check_button()
     mastermind.generate_x_button()
@@ -1100,11 +1133,22 @@ def create_mastermind_ui(mastermind: MasterMind):
 
 
 def start_game_play(mastermind: MasterMind) -> None:
+    """ This function start the game. At first, it will generate secret code,
+    and then, it will allow players to play the game.
+
+    Args:
+        mastermind (MasterMind): a mastermind object.
+    """
     mastermind.generate_secret_code()
     mastermind.play()
 
 
 def run_game_maintenance(mastermind: MasterMind) -> None:
+    """ This function maint the running of the game.
+
+    Args:
+        mastermind (MasterMind): a mastermind obkect
+    """
     mastermind.maintain()
 
 
