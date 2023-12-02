@@ -25,7 +25,7 @@ FONT = ("Arial", 18, "normal")
 CONFIGURATION_PATH = "config.txt"
 
 
-class MasterMindComparison:
+class MasterMindKernal:
     """ This class manages the comparison between secret code and a set of
     picked color of the game mastermind.
 
@@ -127,55 +127,6 @@ class MasterMind:
                        and for players to pick from.
         leaderboard_path (str): Path to the leaderboard file.
         font (tuple): The font settings for text in the game.
-
-    Methods:
-        __init__(self, width, height, title, speed, button_radius, 
-                marble_radius, reg_radius, row_interval, colors, 
-                leaderboard_path, font):
-
-            Initializes the MasterMind game with specified configurations.
-
-        generate_secret_code(self, colors):
-            Generates the secret code for the game by randomly 
-            selecting colors.
-
-        pop_up_window(self, title, prompt):
-            Generates a pop-up window for user input, such as name entry.
-
-        draw_circle(self, x, y, radius):
-            Draws an unfilled circle at specified coordinates 
-            with given radius.
-
-        draw_solid_circle(self, x, y, radius, color):
-            Draws a filled circle at specified coordinates, radius, and color.
-
-        remove_solid_circle(self, x, y, radius):
-            Removes the color from a solid circle, effectively erasing it.
-
-        draw_rectangle(self, x, y, width, height, color):
-            Draws a rectangle with specified dimensions and color.
-
-        draw_image(self, x, y, path):
-            Places an image at given coordinates.
-
-        generate_frame(self):
-            Creates the main frame of the game's UI.
-
-        generate_marbles(self):
-            Generates the marbles in the game's UI where the colors
-            will be displayed.
-
-        generate_hints(self):
-            Generates small circles to give hints to the player.
-
-        light_up_hints(self, nums_correct_position, nums_wrong_position):
-            Lights up the hint circles based on the player's guesses.
-
-        read_leaderboard(self, path):
-            Reads the leaderboard data from a file.
-
-        display_text(self, x, y, color, font, text):
-            Writes text on the game's UI.
     """
 
     def __init__(self, width: int, height: int, title: str,
@@ -204,19 +155,23 @@ class MasterMind:
         self.font = font
         # initialize the result of the game
         self.is_win = False
+        # set the width and height of quit button
+        self.quit_button_width = 58
+        self.quit_button_height = 29
+
+    def initilize_turtle(self):
+        """ This function is to initilize Turtle and Screen to
+        establish the foundation of the turtle UI window.
+        """
         # initialize the self.turtle
         self.turtle = turtle.Turtle()
-        self.turtle.speed(speed)
+        self.turtle.speed(self.speed)
         self.turtle.hideturtle()
 
         # initialize the self.screen
         self.screen = turtle.Screen()
-        self.screen.title(title)
-        self.screen.setup(width=width, height=height)
-
-        # set the width and height of quit button
-        self.quit_button_width = 58
-        self.quit_button_height = 29
+        self.screen.title(self.title)
+        self.screen.setup(width=self.width, height=self.height)
 
     def draw_circle(self, x: int, y: int, radius: int) -> None:
         """ This method is to draw a unfilled circle given
@@ -787,7 +742,7 @@ class MasterMind:
                 Clear the self.selction_stack, increase self.round by 1.
         """
         # use the last result to light up the hint to prompt players
-        last_round_result = MasterMindComparison(
+        last_round_result = MasterMindKernal(
             secret_code=self.secret_code,
             picked_colors=self.selection_stack)
         # to check whether the player win the game
@@ -856,7 +811,7 @@ class MasterMind:
                            f"{self.secret_code[3]} ")
         self.screen.bye()
 
-    def proceed_to_next_round(self, last_result: MasterMindComparison):
+    def proceed_to_next_round(self, last_result: MasterMindKernal):
         """ This method is to proceed the game to the next round.
         To proceed the next round, this method will light up the hints of
         last round. After that, this method will increase self.round by 1, and
@@ -865,7 +820,7 @@ class MasterMind:
         the arrow to the next round's position.
 
         Args:
-            last_result (MasterMindComparison): the hints of last game, which
+            last_result (MasterMindKernal): the hints of last game, which
                 contains the number of color int he correct position and
                 the number of color in the wrong position.
         """
@@ -1098,7 +1053,8 @@ def setup_mastermind_config(path) -> MasterMind:
             font=font)
         # raise the configuration file error
         mastermind.raise_config_error()
-
+    # initilize the turtle UI window
+    mastermind.initilize_turtle()
     return mastermind
 
 
