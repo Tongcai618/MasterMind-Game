@@ -1,7 +1,7 @@
 
 import unittest
 # Importing all classes and functions from the game script
-from mastermind_game import MasterMindKernal
+from mastermind_game import MastermindKernal
 
 
 class TestMastermindGame(unittest.TestCase):
@@ -26,42 +26,42 @@ class TestMastermindGame(unittest.TestCase):
     # self.font = tuple(config['font'].replace(' ', '').split(','))
     # pass  # Implement any set up procedures if needed
 
-    def tear_MasterMindKernal(self):
+    def test_MastermindKernal(self):
         """
         Test Class MasterMindKernal
         """
         # test the winning situation
-        mmc = MasterMindKernal(
+        mmc = MastermindKernal(
             secret_code=['yellow', 'blue', 'red', 'black'],
             picked_colors=['yellow', 'blue', 'red', 'black']
         )
-        self.assertEqual(mmc.get_number_of_correct_position, 4)
-        self.assertEqual(mmc.get_number_of_wrong_position, 0)
-        self.assertEqual(mmc.is_win, True)
+        self.assertEqual(mmc.get_number_of_correct_position(), 4)
+        self.assertEqual(mmc.get_number_of_wrong_position(), 0)
+        self.assertEqual(mmc.is_win(), True)
         # test other situation
-        mmc = MasterMindKernal(
+        mmc = MastermindKernal(
             secret_code=['yellow', 'blue', 'purple', 'black'],
             picked_colors=['yellow', 'blue', 'red', 'black']
         )
-        self.assertEqual(mmc.get_number_of_correct_position, 3)
-        self.assertEqual(mmc.get_number_of_wrong_position, 0)
-        self.assertEqual(mmc.is_win, False)
+        self.assertEqual(mmc.get_number_of_correct_position(), 3)
+        self.assertEqual(mmc.get_number_of_wrong_position(), 0)
+        self.assertEqual(mmc.is_win(), False)
 
-        mmc = MasterMindKernal(
+        mmc = MastermindKernal(
             secret_code=['yellow', 'blue', 'purple', 'black'],
             picked_colors=['yellow', 'red', 'blue', 'green']
         )
-        self.assertEqual(mmc.get_number_of_correct_position, 1)
-        self.assertEqual(mmc.get_number_of_wrong_position, 1)
-        self.assertEqual(mmc.is_win, False)
+        self.assertEqual(mmc.get_number_of_correct_position(), 1)
+        self.assertEqual(mmc.get_number_of_wrong_position(), 1)
+        self.assertEqual(mmc.is_win(), False)
 
-        mmc = MasterMindKernal(
+        mmc = MastermindKernal(
             secret_code=['yellow', 'blue', 'purple', 'black'],
             picked_colors=['blue', 'red', 'yellow', 'green']
         )
-        self.assertEqual(mmc.get_number_of_correct_position, 0)
-        self.assertEqual(mmc.get_number_of_wrong_position, 2)
-        self.assertEqual(mmc.is_win, False)
+        self.assertEqual(mmc.get_number_of_correct_position(), 0)
+        self.assertEqual(mmc.get_number_of_wrong_position(), 2)
+        self.assertEqual(mmc.is_win(), False)
         pass
 
     # def test_MasterMind(self):

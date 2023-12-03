@@ -6,4 +6,5 @@ The second notable group is the "Generating Methods." These methods are crucial 
 
 Lastly, the "Reaction Methods" and "Clicking Methods" handle the interactions and responses within the game. Reaction methods like pop_up_window(), read_leaderboard(), and write_text() manage the feedback and display information to the player, enhancing the game's interactivity. The clicking methods, such as click_selection_button() and click_check_button(), define the game's response to user actions. These methods are critical for the game's functionality, as they determine the flow of the game, including win or loss conditions, advancing rounds, and handling player inputs.
 
+In test_mastermind_game.py, I do a test for MasterMindKernal
 In summary, the design of the MasterMind program is well-structured, dividing the functionality into clear, focused method groups. This design enhances the code's readability and maintainability, allowing for easier modifications and extensions of the game's features.
