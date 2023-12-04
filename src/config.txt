@@ -1,4 +1,4 @@
-width = 800
+width = 750
 height = 750
 speed = 1000
 button_radius = 26

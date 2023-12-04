@@ -4,6 +4,8 @@
 
 MasterMind is a classic code-breaking game. This Python-based implementation offers a graphical user interface using the Turtle library, providing an interactive and engaging experience for the user. The game's goal is to guess a secret color combination in the least number of attempts.
 
+![1701717850060](image/README/1701717850060.png)
+
 ## 2. Installation
 
 ### Prerequisites
