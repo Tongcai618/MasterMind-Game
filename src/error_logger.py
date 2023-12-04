@@ -2,6 +2,8 @@ from datetime import date
 
 
 class ErrorLogger:
+    """ This class is to log errors.
+    """
 
     def __init__(self) -> None:
         """ Construct all necessary attributes for ErrorLogger object.
@@ -20,6 +22,7 @@ class ErrorLogger:
             fun()
         except Exception as e:
             # if any error is raised
-            with open(file="mastermind_errors.err", mode='a') as error_file:
+            with open(file="src/mastermind_errors.err",
+                      mode='a') as error_file:
                 error_file.write(f"{self.day}: \n")
                 error_file.write(f"Exception occurred: {e}\n\n")

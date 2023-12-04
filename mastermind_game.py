@@ -5,9 +5,8 @@
     Project 1
     Mastermind Game
 """
-from error_logger import ErrorLogger
-from mastermind import Mastermind
-
+from src.mastermind import Mastermind
+from src.error_logger import ErrorLogger
 # the default parameters
 WIDTH = 750
 HEIGHT = 750
@@ -18,10 +17,10 @@ REG_RADIUS = 5
 ROW_INTERVAL = 50
 TITLE = "Mastermind Game"
 COLORS = ["red", "blue", "green", "yellow", "purple", "black"]
-LEADERBOARD_PATH = "leaderboard.txt"
+LEADERBOARD_PATH = "src/leaderboard.txt"
 FONT = ("Arial", 18, "normal")
 FONT_COLOR = "blue"
-CONFIGURATION_PATH = "config.txt"
+CONFIGURATION_PATH = "src/config.txt"
 
 
 """

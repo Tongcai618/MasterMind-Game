@@ -1,7 +1,7 @@
 
 import unittest
 # Importing all classes and functions from the game script
-from mastermind_game import MastermindKernal
+from src.mastermind_kernal import MastermindKernal
 
 
 class TestMastermindGame(unittest.TestCase):

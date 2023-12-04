@@ -2,7 +2,7 @@ import turtle
 import random
 import time
 import math
-from mastermind_kernal import MastermindKernal
+from src.mastermind_kernal import MastermindKernal
 
 
 class Mastermind:
@@ -509,7 +509,7 @@ class Mastermind:
         """
         x = 0.026 * self.width
         y = -0.4 * self.height
-        path = "Mastermind_Starter_code/checkbutton.gif"
+        path = "src/checkbutton.gif"
         self.check_button_coordinate = self.draw_image(x=x, y=y,
                                                        path=path)
         return self.check_button_coordinate
@@ -523,7 +523,7 @@ class Mastermind:
         """
         x = 0.13 * self.width
         y = -0.4 * self.height
-        path = "Mastermind_Starter_code/xbutton.gif"
+        path = "src/xbutton.gif"
         self.x_button_coordinate = self.draw_image(x=x, y=y,
                                                    path=path)
 
@@ -542,7 +542,7 @@ class Mastermind:
         # set the coordinates and path of quit button
         x = 0.30 * self.width
         y = -0.4 * self.height
-        path = "Mastermind_Starter_code/quit.gif"
+        path = "src/quit.gif"
         self.quit_button_coordinate = self.draw_image(x=x,
                                                       y=y,
                                                       path=path)
@@ -560,7 +560,7 @@ class Mastermind:
 
         self.arrow = turtle.Turtle()
         self.arrow.speed(self.speed)
-        arrow = "Mastermind_Starter_code/arrow_symbol.gif"
+        arrow = "src/arrow_symbol.gif"
         self.screen.addshape(arrow)
         self.arrow.penup()
         self.arrow_coordinate = {'x': initial_x,
@@ -831,7 +831,7 @@ class Mastermind:
         # pop up the quit.gif window
         x = 0
         y = 0
-        path = "Mastermind_Starter_code/quitmsg.gif"
+        path = "src/quitmsg.gif"
         self.draw_image(x=x, y=y, path=path)
         # after 2 seconds, close the screen
         self.screen.onscreenclick(None)
@@ -843,7 +843,7 @@ class Mastermind:
         """
         x = 0
         y = 0
-        path = "Mastermind_Starter_code/winner.gif"
+        path = "src/winner.gif"
         # pop up the winner.gif window
         self.draw_image(x=x, y=y, path=path)
         self.to_leaderboard(self.name)
@@ -858,7 +858,7 @@ class Mastermind:
         # pop up the lose.gif window
         x = 0
         y = 0
-        path = "Mastermind_Starter_code/Lose.gif"
+        path = "src/Lose.gif"
         self.draw_image(x=x, y=y, path=path)
         self.screen.onscreenclick(None)
         time.sleep(2)
@@ -905,7 +905,7 @@ class Mastermind:
         """
         x = 0.27 * self.width
         y = 0.33 * self.height
-        path = "Mastermind_Starter_code/leaderboard_error.gif"
+        path = "src/leaderboard_error.gif"
         self.draw_image(x=x, y=y, path=path)
 
     def raise_config_error(self):
@@ -914,7 +914,7 @@ class Mastermind:
         """
         x = 0.27 * self.width
         y = -0.2 * self.height
-        path = 'Mastermind_Starter_code/file_error.gif'
+        path = 'src/file_error.gif'
         self.draw_image(x=x, y=y, path=path)
 
     def is_within_circular_button_area(self, x: int, y: int,

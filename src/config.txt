@@ -7,6 +7,6 @@ reg_radius = 5
 row_interval = 50
 title = Mastermind Game
 colors = red, blue, green, yellow, purple, black
-leaderboard_path = leaderboard.txt
+leaderboard_path = src/leaderboard.txt
 font_color = blue
 font = Arial, 18, normal
